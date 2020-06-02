@@ -14,4 +14,12 @@ router.post('/', (req, res, next) => {
   })
 })
 
+router.get('/:streamId', (req, res, next) => {
+  const id = req.params.streamId
+
+  res.status(200).json({
+    message: 'handling streams GET/ request',
+  })
+})
+
 export default router
