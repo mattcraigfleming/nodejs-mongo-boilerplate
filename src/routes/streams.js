@@ -3,10 +3,15 @@ import Stream from '../models/Stream'
 
 const router = Router()
 
-router.get('/', (req, res, next) => {
-  res.status(200).json({
-    message: 'handling streams GET/ request',
-  })
+router.get('/', async (req, res, next) => {
+  try {
+    const streams = await Stream.find()
+    res.json(streams)
+  } catch (e) {
+    res.json({
+      message: e,
+    })
+  }
 })
 
 router.post('/', async (req, res, next) => {
@@ -17,13 +22,10 @@ router.post('/', async (req, res, next) => {
     created_at: req.body.created_at,
     updated_at: req.body.updated_at,
   })
-  try {
-    const data = await newStream.save()
-    return data
-  } catch (e) {
-    console.log(e)
-  }
-  return res.json(data)
+
+  const data = await newStream.save()
+
+  res.json(data)
 })
 
 router.get('/:streamId', (req, res, next) => {
