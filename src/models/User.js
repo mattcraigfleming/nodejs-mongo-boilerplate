@@ -3,8 +3,8 @@ import mongoose from 'mongoose'
 const Schema = mongoose.Schema
 
 const userSchema = new Schema({
-  email: String,
-  username: { type: String, required: true, unique: true },
+  email: { type: String, required: true, unique: true, min: 6, max: 255 },
+  username: { type: String },
   password: { type: String, required: true },
   admin: Boolean,
   location: String,
@@ -12,8 +12,8 @@ const userSchema = new Schema({
     age: Number,
     website: String,
   },
-  created_at: Date,
-  updated_at: Date,
+  created_at: { type: Date, default: Date.now() },
+  updated_at: { type: Date, default: Date.now() },
 })
 
 const User = mongoose.model('User', userSchema)
