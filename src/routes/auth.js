@@ -23,6 +23,9 @@ router.post('/login', async (req, res) => {
   const token = jwt.sign({ id: user._id }, 'tokenSecret', {
     expiresIn: '48h',
   })
+  if(user.isLocked)   return res.status(400).json({
+    message: 'Account Locked',
+  })
   res.header('auth-token', token).send(token)
 })
 
@@ -65,7 +68,7 @@ router.post('/forgot-password', (req, res) => {
   // Find user by email and add token and token expiration to the db
   const user = await User.findOne({ email: req.body.email })
   if (!user) return res.status(400).json({ message: 'Invalid Credentials' })
-
+  user.isLocked = true
   user.resetPasswordToken = token;
   user.resetPasswordExpires = Date.now() + 3600000;
   user.save()
