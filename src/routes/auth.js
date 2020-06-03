@@ -61,13 +61,9 @@ router.post('/register', async (req, res) => {
 })
 
 router.post('/forgot-password', (req, res) => {
-  console.log(req.body.email)
-  // Generate token
   const id = v4()
-  console.log(`http://${req.headers.host}/forgot-password/${id}`)
-  // Find user by email and add token and token expiration to the db
   const user = await User.findOne({ email: req.body.email })
-  if (!user) return res.status(400).json({ message: 'Invalid Credentials' })
+  if (!user) return res.status(400).json({ message: 'Invalid Email' })
   user.isLocked = true
   user.resetPasswordToken = token;
   user.resetPasswordExpires = Date.now() + 3600000;
@@ -85,6 +81,7 @@ router.get('/forgot-password/:token', (req, res) => {
   if (!user) return res.status(400).json({ message: 'Password reset token is invalid or has expired' })
 
   user.password = req.body.password;
+  user.isLocked = false;
   user.resetPasswordToken = undefined;
   user.resetPasswordExpires = undefined;
 
