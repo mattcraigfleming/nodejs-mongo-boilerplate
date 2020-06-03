@@ -6,6 +6,7 @@ import authRoutes from './routes/auth'
 import streamRoutes from './routes/streams'
 
 const uri = 'mongodb://test:test123@ds125574.mlab.com:25574/nodejs-boilerplate'
+mongoose.set('useCreateIndex', true)
 
 mongoose.connect(uri, { useUnifiedTopology: true, useNewUrlParser: true })
 

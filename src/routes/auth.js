@@ -1,5 +1,14 @@
 import { Router } from 'express'
+import * as yup from 'yup'
 import User from '../models/User'
+
+const schema = yup.object().shape({
+  email: yup.string().min(3).max(255),
+  password: yup.string().min(3).max(255),
+  username: yup.string().min(3).max(255),
+  admin: yup.bool(),
+  location: yup.string().min(3).max(255),
+})
 
 const router = Router()
 router.get('/', (req, res) => {
@@ -9,7 +18,18 @@ router.get('/', (req, res) => {
 })
 
 router.post('/register', async (req, res) => {
-  console.log(req.body)
+  try {
+    await schema.validate(req.body, { abortEarly: false })
+  } catch (err) {
+    res.status(400).json(err)
+  }
+
+  const emailExists = await User.findOne({ email: req.body.email })
+
+  if (emailExists) {
+    res.status(400).json({ message: 'email already exists' })
+  }
+
   const newUser = new User({
     email: req.body.email,
     password: req.body.password,
