@@ -1,4 +1,6 @@
 import express from 'express'
+import http from 'http'
+import socketio from 'socket.io'
 import mongoose from 'mongoose'
 import bodyParser from 'body-parser'
 import rateLimit from 'express-rate-limit'
@@ -16,7 +18,9 @@ connection.once('open', () =>
   console.log('MongoDB database connection established successfully')
 )
 const app = express()
-const port = 3000
+const server = http.createServer(app)
+const io = socketio(server)
+const port = 5000
 
 app.use(morgan('dev'))
 
@@ -31,6 +35,10 @@ app.use(bodyParser.json())
 
 app.use('/api/', apiRoutes)
 
-app.listen(port, () =>
+io.on('connection', (socket) => {
+  console.log('New WS Connection:::::')
+})
+
+server.listen(port, () =>
   console.log(`Example app listening at http://localhost:${port}`)
 )
