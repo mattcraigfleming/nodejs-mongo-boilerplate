@@ -15,7 +15,7 @@ mongoose.connect(uri, { useUnifiedTopology: true, useNewUrlParser: true })
 const connection = mongoose.connection
 
 connection.once('open', () =>
-  console.log('MongoDB database connection established successfully')
+  console.log('MongoDB database connection established....')
 )
 const app = express()
 const server = http.createServer(app)
@@ -33,7 +33,7 @@ app.use(limiter)
 
 app.use(bodyParser.json())
 
-app.use('/api/', apiRoutes)
+app.use('/api/v1/', apiRoutes)
 
 io.on('connection', (socket) => {
   console.log('A new web socket connection has been established....')
@@ -41,5 +41,5 @@ io.on('connection', (socket) => {
 })
 
 server.listen(port, () =>
-  console.log(`Server listening on: http://localhost:${port}`)
+  console.log(`Server listening on: http://localhost:${port} ....`)
 )

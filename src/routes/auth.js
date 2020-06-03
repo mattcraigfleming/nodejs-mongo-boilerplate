@@ -1,4 +1,5 @@
 import bcrypt from 'bcryptjs'
+import { v4 } from 'uuid'
 import { Router } from 'express'
 import jwt from 'jsonwebtoken'
 import User from '../models/User'
@@ -54,6 +55,40 @@ router.post('/register', async (req, res) => {
   } catch (err) {
     res.status(400).json(err)
   }
+})
+
+router.post('/forgot-password', (req, res) => {
+  console.log(req.body.email)
+  // Generate token
+  const id = v4()
+  console.log(`http://${req.headers.host}/forgot-password/${id}`)
+  // Find user by email and add token and token expiration to the db
+  const user = await User.findOne({ email: req.body.email })
+  if (!user) return res.status(400).json({ message: 'Invalid Credentials' })
+
+  user.resetPasswordToken = token;
+  user.resetPasswordExpires = Date.now() + 3600000;
+  user.save()
+  // Send email
+
+  //Notify user to post to other route 
+})
+
+router.get('/forgot-password/:token', (req, res) => {
+  console.log(req.params)
+  console.log(req.body.password)
+
+  const user = await User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() }})
+  if (!user) return res.status(400).json({ message: 'Password reset token is invalid or has expired' })
+
+  user.password = req.body.password;
+  user.resetPasswordToken = undefined;
+  user.resetPasswordExpires = undefined;
+
+  user.save()
+
+  console.log('Password has changed');
+
 })
 
 export default router

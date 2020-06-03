@@ -14,6 +14,8 @@ const userSchema = new Schema({
   },
   created_at: { type: Date, default: Date.now() },
   updated_at: { type: Date, default: Date.now() },
+  resetPasswordToken: String,
+  resetPasswordExpires: Date,
 })
 
 const User = mongoose.model('User', userSchema)
