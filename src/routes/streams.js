@@ -15,10 +15,11 @@ router.get('/', async (req, res, next) => {
 })
 
 router.post('/', async (req, res, next) => {
+  const { description, created_at, updated_at } = req.body
   const newStream = new Stream({
-    description: req.body.description,
-    created_at: req.body.created_at,
-    updated_at: req.body.updated_at,
+    description,
+    created_at,
+    updated_at,
   })
   const data = await newStream.save()
   res.json(data)

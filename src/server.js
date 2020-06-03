@@ -36,10 +36,10 @@ app.use(bodyParser.json())
 app.use('/api/', apiRoutes)
 
 io.on('connection', (socket) => {
-  console.log('New WS Connection:::::')
+  console.log('A new web socket connection has been established....')
   socket.emit('message', 'Welcome to chat')
 })
 
 server.listen(port, () =>
-  console.log(`Example app listening at http://localhost:${port}`)
+  console.log(`Server listening on: http://localhost:${port}`)
 )
