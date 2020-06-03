@@ -37,6 +37,7 @@ app.use('/api/', apiRoutes)
 
 io.on('connection', (socket) => {
   console.log('New WS Connection:::::')
+  socket.emit('message', 'Welcome to chat')
 })
 
 server.listen(port, () =>
